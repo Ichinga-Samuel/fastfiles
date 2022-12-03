@@ -12,10 +12,11 @@ logger = logging.getLogger(__name__)
 
 
 class S3(CloudUpload):
-    def __init__(self, *, file: bytes | UploadFile or None = None, files: list[UploadFile | bytes] or None = None, region_name: str = "",
-                 aws_access_key_id: str = "", aws_secret_access_key: str = "",
-                 bucket_name: str = "", **kwargs):
-        super().__init__(file=file, files=files, **kwargs)
+
+    def __init__(self, *, file: bytes | UploadFile | None = None, files: list[UploadFile | bytes] | None = None, region_name: str = "",
+                 aws_access_key_id: str = "", aws_secret_access_key: str = "", bucket_name: str = "", name: str = "", extra_args: dict | None = None):
+
+        super().__init__(file=file, files=files, name=name, extra_args=extra_args)
         self.region_name = region_name or os.environ.get('AWS_REGION')
         self.aws_access_key_id = aws_access_key_id or os.environ.get('AWS_ACCESS_KEY')
         self.aws_secret_access_key = aws_secret_access_key or os.environ.get('AWS_SECRET_KEY')
@@ -30,6 +31,7 @@ class S3(CloudUpload):
         name = name or self.name
         file_data = await self._upload_file(file=self.file, name=name)
         self.response = file_data
+        return self.response
 
     async def _upload_file(self, *, file, name: str = "", client=None) -> FileData:
         try:
@@ -47,3 +49,4 @@ class S3(CloudUpload):
         client = await self.get_client()
         tasks = [asyncio.create_task(self._upload_file(file=file, client=client)) for file in self.files]
         self.response = await asyncio.gather(*tasks)
+        return self.response

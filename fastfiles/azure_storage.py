@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class AzureStorage(CloudUpload):
-    def __init__(self, *, file: bytes | UploadFile or None = None, files: list[UploadFile | bytes] or None = None,
-                 connection_string: str = "", container_name: str = "", credential=None, **kwargs):
-        super().__init__(file=file, files=files, **kwargs)
+    def __init__(self, *, file: bytes | UploadFile | None = None, files: list[UploadFile | bytes] | None = None, connection_string: str = "",
+                 container_name: str = "", credential=None, name: str = "", extra_args: dict | None = None):
+        super().__init__(file=file, files=files, name=name, extra_args=extra_args)
         self.connection_str = connection_string or os.environ.get('AZURE_STORAGE_CONNECTION_STRING')
         self.container_name = container_name or os.environ['CONTAINER_NAME']
         self.credential = credential
@@ -25,6 +25,7 @@ class AzureStorage(CloudUpload):
         name = name or self.name
         file_data = await self._upload_file(file=self.file, name=name)
         self.response = file_data
+        return self.response
 
     async def _upload_file(self, *, file, name: str = "", client=None) -> FileData:
         try:
@@ -41,3 +42,4 @@ class AzureStorage(CloudUpload):
         client = await self.get_client()
         tasks = [asyncio.create_task(self._upload_file(file=file, client=client)) for file in self.files]
         self.response = await asyncio.gather(*tasks)
+        return self.response

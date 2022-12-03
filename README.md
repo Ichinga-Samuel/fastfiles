@@ -3,12 +3,12 @@ File upload to the cloud for fastapi\
 Sample Usage with Amazon S3
 
 ```python
-from fastapi import FastAPI, Request, Form, UploadFile, Depends, Response
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
 
-from fastfiles.s3 import S3
+from fastfiles import S3
 
 load_dotenv()
 
@@ -23,8 +23,10 @@ async def home(req: Request):
 
 
 @app.post('/upload')
-async def upload(name: str = Form(), files: S3 = Depends(s3)):
+async def upload(file: S3 = Depends(s3)):
+    print(file.response)
     return RedirectResponse('/', status_code=302)
+
 ```
 Supports both multiple and single file upload\
 For Single upload make sure the file input element name is file. while for multiple files upload it should be named files.
