@@ -1,18 +1,23 @@
 from abc import ABC, abstractmethod
+from logging import getlogger 
 
 from fastapi import UploadFile
 from pydantic import BaseModel, HttpUrl
+
+logger = getlogger(__main__)
 
 
 class FileData(BaseModel):
     """
     Represents the result of an upload operation
     Attributes:
-        public_url (HttpUrl | str): A public URL for accessing the object
+        url (HttpUrl | str): A URL for accessing the object.
         status (bool): True if the upload is successful else False.
+        error_message (str): Error message for failed upload.
     """
-    public_url: HttpUrl | str = ""
+    url: HttpUrl | str = ""
     status: bool = False
+    error_message: str = ""
 
 
 class CloudUpload(ABC):
@@ -22,7 +27,6 @@ class CloudUpload(ABC):
         multi_upload: Upload multiple objects to the cloud
 
     Attributes:
-        result (FileData | list[FileData]): Result of the file upload operation.
         A single FileData object for a single upload and a list of FileData objects for multiple uploads.
     """
 
@@ -37,13 +41,12 @@ class CloudUpload(ABC):
     async def __call__(self, file: UploadFile | None = None, files: list[UploadFile] | None = None) -> FileData | list[FileData]:
         try:
             if file:
-                await self.upload(file)
+                return await self.upload(file)
     
             elif files:
-                await self.multi_upload(files=files)
+                return await self.multi_upload(files=files)
         except Exception as err:
-            pass
-        return self.result
+            return FileData(status=False, error_message=str(err))
 
     @abstractmethod
     async def upload(self, *, file: UploadFile | None = None) -> FileData:
