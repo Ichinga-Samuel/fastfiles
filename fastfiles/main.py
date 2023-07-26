@@ -29,7 +29,7 @@ class CloudUpload(ABC):
         multi_upload: Upload multiple objects to the cloud
 
     Attributes:
-        A single FileData object for a single upload and a list of FileData objects for multiple uploads.
+        config: A config dict
     """
 
     def __init__(self, config: dict | None = None):
@@ -42,7 +42,7 @@ class CloudUpload(ABC):
     async def __call__(self, file: UploadFile | None = None, files: list[UploadFile] | None = None) -> FileData | list[FileData]:
         try:
             if file:
-                return await self.upload(file, message='')
+                return await self.upload(file=file)
     
             if files:
                 return await self.multi_upload(files=files)
