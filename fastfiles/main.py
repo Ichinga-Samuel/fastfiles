@@ -13,11 +13,13 @@ class FileData(BaseModel):
     Attributes:
         url (HttpUrl | str): A URL for accessing the object.
         status (bool): True if the upload is successful else False.
-        error_message (str): Error message for failed upload.
+        error (str): Error message for failed upload.
+        message: Response Message
     """
-    url: HttpUrl | str = ""
-    status: bool = False
-    error_message: str = ""
+    url: HttpUrl | str = ''
+    status: bool = True
+    error: str = ''
+    message: str = ''
 
 
 class CloudUpload(ABC):
@@ -35,21 +37,20 @@ class CloudUpload(ABC):
         Keyword Args:
             config (dict): A dictionary of config settings
         """"
-        self.result: FileData | list[FileData] = FileData()
         self.config = config or {}
         
     async def __call__(self, file: UploadFile | None = None, files: list[UploadFile] | None = None) -> FileData | list[FileData]:
         try:
             if file:
-                return await self.upload(file)
+                return await self.upload(file, message='')
     
-            elif files:
+            if files:
                 return await self.multi_upload(files=files)
         except Exception as err:
-            return FileData(status=False, error_message=str(err))
+            return FileData(status=False, error=str(err), message='File upload was unsuccessful')
 
     @abstractmethod
-    async def upload(self, *, file: UploadFile | None = None) -> FileData:
+    async def upload(self, *, file: UploadFile) -> FileData:
         """"""
 
     @abstractmethod
