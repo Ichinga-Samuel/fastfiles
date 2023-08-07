@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>File Upload</title>
+  </head>
+
+  <body>
+    <main style="margin:20%">
+        <div style="margin: auto">
+            <h1>S3 File Upload</h1>
+            <form action="{{url_for('s3_upload')}}" method="post" style="margin:5px 5px" enctype="multipart/form-data">
+                <div style="margin: 5px 0">
+                  <input type="file" name="file">
+                </div>
+                <button type="submit" style="display: bloc">Upload</button>
+            </form>
+        </div>
+        <div style="margin: auto">
+            <h1>Local File Upload</h1>
+            <form action="{{url_for('local_upload')}}" method="post" style="margin:5px 5px"
+                  enctype="multipart/form-data">
+                <div style="margin: 5px 0">
+                  <input type="file" name="files" multiple>
+                </div>
+                <button type="submit" style="display: bloc">Upload</button>
+            </form>
+        </div>
+        <div style="margin: auto">
+            <h1>Memory File Upload</h1>
+            <form action="{{url_for('memory_upload')}}" method="post" style="margin:5px 5px"
+                  enctype="multipart/form-data">
+                <div style="margin: 5px 0">
+                  <input type="file" name="file">
+                </div>
+                <button type="submit" style="display: bloc">Upload</button>
+            </form>
+        </div>
+    </main>
+  </body>
+</html>

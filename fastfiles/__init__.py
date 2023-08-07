@@ -1,3 +1,4 @@
-from .azure_storage import AzureStorage
+from .main import FileData
+from .memory import Memory
 from .s3 import S3
-from .main import CloudUpload, FileData
+from .local import Local
