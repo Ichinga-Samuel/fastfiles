@@ -10,7 +10,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory='.')
 
 s3 = S3(config={'extra-args': {'ACL': 'public-read'}})
-local = Local()
+local = Local(config={"dest": "test/uploads/check"})
 memory = Memory()
 
 

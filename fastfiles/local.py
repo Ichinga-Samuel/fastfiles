@@ -1,13 +1,13 @@
 import asyncio
 from logging import getLogger
 
-from .main import CloudUpload, FileData, Path
+from .main import FileUpload, FileData, Path
 from fastapi import UploadFile
 
 logger = getLogger()
 
 
-class Local(CloudUpload):
+class Local(FileUpload):
     """
     Local storage for FastAPI.
     """
@@ -22,9 +22,16 @@ class Local(CloudUpload):
             FileData: Result of file upload
         """
         try:
-            dest = self.config.get('dest') or Path('uploads') / f'{file.filename}'
+            # dest = self.config.get('dest') or Path('uploads') / f'{file.filename}'
+            if dest:=self.config.get("dest"):
+                dest = Path(dest)
+                dest.mkdir(parents=True, exist_ok=True)
+            else:
+                dest = Path('uploads')
+                dest.mkdir(parents=True, exist_ok=True)
+
             file_object = await file.read()
-            with open(f'{dest}', 'wb') as fh:
+            with open(f'{dest}/{file.filename}', 'wb') as fh:
                 fh.write(file_object)
             await file.close()
             return FileData(path=dest, message=f'{file.filename} saved successfully', content_type=file.content_type,

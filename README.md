@@ -1,5 +1,5 @@
 # fastfiles
-File storage (Local, Memory, and Cloud) for fastapi. Proof of concept for [filestore](https://github.com/Ichinga-Samuel/faststore)
+File storage (Local, Memory, and Cloud) for fastapi.
 
 ```python
 from fastapi import FastAPI, Request, Depends

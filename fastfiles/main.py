@@ -33,7 +33,7 @@ class FileData(BaseModel):
     message: str = ''
 
 
-class CloudUpload(ABC):
+class FileUpload(ABC):
     """
     Methods:
         upload: Uploads a single object to the cloud

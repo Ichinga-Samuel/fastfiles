@@ -1,16 +1,16 @@
 """
-Memory storage for FastStore. This storage is used to store files in memory.
+This storage is used to store files in memory.
 """
 import asyncio
 from logging import getLogger
 
-from .main import CloudUpload, FileData
+from .main import FileUpload, FileData
 from fastapi import UploadFile
 
 logger = getLogger()
 
 
-class Memory(CloudUpload):
+class Memory(FileUpload):
     """
     Memory storage for FastAPI.
     This storage is used to store files in memory and returned as bytes.

@@ -5,12 +5,12 @@ from urllib.parse import quote as urlencode
 from functools import cache
 
 import boto3
-from .main import CloudUpload, FileData, UploadFile
+from .main import FileUpload, FileData, UploadFile
 
 logger = logging.getLogger(__name__)
 
 
-class S3(CloudUpload):
+class S3(FileUpload):
     @property
     @cache
     def client(self):
